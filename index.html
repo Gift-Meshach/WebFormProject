@@ -3,66 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Form Project</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        form {
-            margin-top: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-        }
-        input {
-            margin-bottom: 12px;
-            padding: 8px;
-            width: 100%;
-            max-width: 400px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Form Submission</title>
 </head>
 <body>
-    <h1>Welcome to My Web Form Project</h1>
+    <h1>Submit Your Details</h1>
     <form id="myForm">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-
+        <input type="text" id="name" name="name" required><br><br>
+        
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
+        <input type="email" id="email" name="email" required><br><br>
+        
         <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" required>
-
+        <input type="text" id="phone" name="phone" required><br><br>
+        
         <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required>
-
+        <input type="number" id="age" name="age" required><br><br>
+        
         <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required>
-
+        <input type="date" id="dob" name="dob" required><br><br>
+        
         <label for="gender">Gender:</label>
         <select id="gender" name="gender" required>
-            <option value="">Select...</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
-        </select>
-
+        </select><br><br>
+        
         <label for="comments">Comments:</label>
-        <input type="text" id="comments" name="comments">
-
+        <textarea id="comments" name="comments" required></textarea><br><br>
+        
         <button type="submit">Submit</button>
     </form>
 
@@ -79,33 +49,38 @@
             });
 
             // Send data to Google Sheets
-            fetch('https://script.google.com/macros/s/AKfycbw43nTjs8DsNuM9Oob7mcliIeY7cL32c0Xy8HdO4M1Uj1_L325JGkK1UM2obyx5nPOIBg/exec', {
+            fetch('https://script.google.com/macros/s/AKfycby_VimOqxx7ONeqvbDv201CzfHubhmiao_D4Qg6_e4o5W352nO3xqMbaOObi52q06VDBg/exec', {
                 method: 'POST',
                 body: JSON.stringify(jsonData),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to submit to Google Sheets');
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('Success:', data);
                 alert('Data submitted to Google Sheets!');
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('Error submitting to Google Sheets.');
-            });
+                alert('Error submitting to Google Sheets. Submitting to Formspree...');
 
-            // Send data to Formspree
-            fetch('https://formspree.io/f/xkgnwvqd', {
-                method: 'POST',
-                body: new FormData(this)
+                // If Google Sheets submission fails, send data to Formspree
+                return fetch('https://formspree.io/f/xkgnwvqd', {
+                    method: 'POST',
+                    body: new FormData(this)
+                });
             })
             .then(response => {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Network response was not ok.');
+                throw new Error('Formspree submission failed.');
             })
             .then(data => {
                 console.log('Formspree Success:', data);
