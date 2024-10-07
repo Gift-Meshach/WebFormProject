@@ -64,7 +64,7 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
     });
 
     // Send data to Google Sheets
-    fetch('YOUR_GOOGLE_SCRIPT_URL', {
+    fetch('https://script.google.com/macros/s/AKfycbyT3cWgBbVNuNAebRPAaxrZjFlnaVaz_9_WKaKJBR4nx-N9YF-S8A1fpS2Vx09nrtbnig/exec', {
         method: 'POST',
         body: JSON.stringify(jsonData),
         headers: {
@@ -82,7 +82,7 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
     });
 
     // Send data to Formspree
-    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+    fetch('https://formspree.io/f/xkgnwvqd', {
         method: 'POST',
         body: new FormData(this)
     })
